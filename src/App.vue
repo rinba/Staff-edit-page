@@ -23,7 +23,13 @@ const onDelete = async (id) =>{
 }
 
 //编辑功能
-
+//1.打开弹框（模板引用，获取子组件实例，调用方法或者修改属性）
+//2.回填数据（调用详情接口 / 当前行的静态数据）
+const editRef = ref(null)
+const onEdit = (row)=>{  //此处的row是实参
+  editRef.value.open(row) //模板引用，获取子组件实例，调用方法
+}
+//3.列表更新：绑定自定义事件on-update，在子组件中《子传父》
 </script>
 
 <template>
@@ -33,15 +39,15 @@ const onDelete = async (id) =>{
       <el-table-column label="姓名" prop="name" width="150"></el-table-column>
       <el-table-column label="籍贯" prop="place"></el-table-column>
       <el-table-column label="操作" width="150">
-        <!--使用作用域插槽获取id，这里使用解构赋值row-->
+        <!--使用作用域插槽获取数据，这里解构赋值当前行数据row-->
         <template #default="{row}">
-          <el-button type="primary" link>编辑</el-button>
+          <el-button type="primary" @click="onEdit(row)" link>编辑</el-button>
           <el-button type="danger" @click="onDelete(row.id)" link>删除</el-button>
         </template>
       </el-table-column>
     </el-table>
   </div>
-  <Edit />
+  <Edit ref="editRef" @on-update="getList" />
 </template>
 
 <style scoped>
